@@ -2,18 +2,15 @@ import ballerina/http;
 import ballerina/io;
 
 configurable string openapiPath = ?;
-configurable string toolKitName = ?;
 configurable string apiServiceUrl = ?;
 configurable string platformServiceUrl = ?;
 
 type RegisterToolsInput record {|
-    string toolKitName;
     string serviceUrl;
     json openapi;
 |};
 
 type ExecuteToolInput record {|
-    string toolKitName;
     string command;
 |};
 
@@ -34,7 +31,6 @@ public function main() returns error? {
 
 function registerTools() returns string|error {
     RegisterToolsInput payload = {
-        toolKitName: toolKitName,
         serviceUrl: apiServiceUrl,
         openapi: check io:fileReadJson(openapiPath)
     };
@@ -44,7 +40,6 @@ function registerTools() returns string|error {
 
 function executeCommand(string command) returns json|error {
     ExecuteToolInput payload = {
-        toolKitName,
         command
     };
     http:Response response = check platformServiceClient->post("/execute", payload);
