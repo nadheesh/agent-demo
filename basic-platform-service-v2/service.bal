@@ -21,18 +21,19 @@ type ExecuteToolInput record {|
 type AgentData record {|
     readonly int orgId;
     agent:Agent agent;
-    agent:HttpServiceToolKit[] toolKits;
+    map<agent:HttpServiceToolKit> toolKits;
 |};
 
-table<AgentData> key(orgId) registeredAgents = table[];
+table<AgentData> key(orgId) registeredAgents = table [];
 
 # A service representing a network-accessible API
 # bound to port `9090`.
 service / on new http:Listener(9090) {
 
     resource function post register(@http:Payload RegisterToolsInput payload) returns string|error {
-        agent:HttpServiceToolKit[] registeredToolKits = [];
-        
+        agent:HttpServiceToolKit[] toolKitList = [];
+        map<agent:HttpServiceToolKit> registeredToolKits = {};
+
         check io:fileWriteJson(OPENAPI_PATH, payload.openapi);
 
         agent:HttpApiSpecification apiSpecification = check agent:extractToolsFromOpenApiSpec(OPENAPI_PATH);
@@ -40,31 +41,35 @@ service / on new http:Listener(9090) {
 
         if registeredAgents.hasKey(payload.orgId) {
             AgentData agentData = registeredAgents.get(payload.orgId);
-            registeredToolKits = agentData.toolKits; //TODO: need check if the toolkit is already registered
-            registeredToolKits.push(toolKit);
+            if(agentData.toolKits.hasKey(payload.serviceUrl)) { // TODO: find a better way to check if the toolkit is already registered
+                return "The toolkit is already registered for the agent.";
+            }
+            toolKitList = agentData.toolKits.toArray();
+            toolKitList.push(toolKit);
+            registeredToolKits = agentData.toolKits;
         }
         else {
-            registeredToolKits = [toolKit];
+            toolKitList = [toolKit];
         }
 
+        registeredToolKits[payload.serviceUrl] = toolKit;
         agent:Gpt3Model model = check new ({auth: {token: openAIToken}});
-        agent:Agent agent = check new (model, ...registeredToolKits);
+        agent:Agent agent = check new (model, ...toolKitList);
 
         registeredAgents.put({orgId: payload.orgId, agent: agent, toolKits: registeredToolKits});
         check file:remove(OPENAPI_PATH);
 
         return "Successfully registered API for the agent.";
-
     }
 
     resource function post execute(@http:Payload ExecuteToolInput payload) returns json|error {
 
         if !registeredAgents.hasKey(payload.orgId) {
-            return error ("An agent not registered for the organization.");
+            return error("An agent not registered for the organization.");
         }
         agent:Agent agent = registeredAgents.get(payload.orgId).agent;
         agent:ExecutionStep[] agentExecutionSteps = agent.run(payload.command);
-        
+
         return {"response": agentExecutionSteps.toString()};
     }
 }
