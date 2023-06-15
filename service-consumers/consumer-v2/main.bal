@@ -22,9 +22,9 @@ final http:Client platformServiceClient = check new(platformServiceUrl);
 
 public function main() returns error? {
     // register tools
-    // io:println("\n\nRegistering tools...");
-    // string registerRes = check registerTools();
-    // io:println(registerRes);
+    io:println("\n\nRegistering tools...");
+    string registerRes = check registerTools();
+    io:println(registerRes);
 
     // execute command
     string command = "list all my wifi accounts and send it to my email address. my email is alice@gmail.com";
