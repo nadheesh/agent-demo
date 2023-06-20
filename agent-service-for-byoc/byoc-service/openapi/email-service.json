@@ -1,1 +1,100 @@
- {"openapi":"3.0.1","info":{"title":"EmailAPI - Endpoint 9090 803","version":"1.0.0"},"servers":[{"url":"https://f2c7f522-ef47-48ce-a429-3fc2f15d2011-dev.e1-us-east-azure.choreoapis.dev/fgbx/emailapi/endpoint-9090-803/1.0.0"}],"paths":{"/*":{"get":{"operationId":"operation1_get_default","responses":{"200":{"description":"Ok"}},"security":[{"default":[]}],"x-throttling-tier":"Unlimited","x-throttling-limit":{"requestCount":-1,"unit":"MINUTE"},"x-auth-type":"Application & Application User"},"put":{"operationId":"operation1_put_default","responses":{"200":{"description":"Ok"}},"security":[{"default":[]}],"x-throttling-tier":"Unlimited","x-throttling-limit":{"requestCount":-1,"unit":"MINUTE"},"x-auth-type":"Application & Application User"},"post":{"operationId":"operation1_post_default","responses":{"200":{"description":"Ok"}},"security":[{"default":[]}],"x-throttling-tier":"Unlimited","x-throttling-limit":{"requestCount":-1,"unit":"MINUTE"},"x-auth-type":"Application & Application User"},"delete":{"operationId":"operation1_delete_default","responses":{"200":{"description":"Ok"}},"security":[{"default":[]}],"x-throttling-tier":"Unlimited","x-throttling-limit":{"requestCount":-1,"unit":"MINUTE"},"x-auth-type":"Application & Application User"},"patch":{"operationId":"operation1_patch_default","responses":{"200":{"description":"Ok"}},"security":[{"default":[]}],"x-throttling-tier":"Unlimited","x-throttling-limit":{"requestCount":-1,"unit":"MINUTE"},"x-auth-type":"Application & Application User"}}},"components":{"securitySchemes":{"default":{"type":"oauth2","flows":{"implicit":{"authorizationUrl":"https:///authorize","scopes":{}}}}}}}
+{
+    "openapi": "3.0.1",
+    "info": {
+        "title": "EmailAPI - Endpoint 9090 803",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "https://f2c7f522-ef47-48ce-a429-3fc2f15d2011-dev.e1-us-east-azure.choreoapis.dev/fgbx/emailapi/endpoint-9090-803/1.0.0"
+        }
+    ],
+    "paths": {
+        "/sendEmail": {
+            "post": {
+                "summary": "A resource for sending emails",
+                "operationId": "postSendemail",
+                "requestBody": {
+                    "description": "the input payload containing the email address, subject and content",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SendEmailPayload"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "default": []
+                    }
+                ],
+                "x-throttling-tier": "Unlimited",
+                "x-throttling-limit": {
+                    "requestCount": -1,
+                    "unit": "MINUTE"
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "SendEmailPayload": {
+                "required": [
+                    "content",
+                    "email",
+                    "subject"
+                ],
+                "type": "object",
+                "properties": {
+                    "content": {
+                        "type": "string",
+                        "description": "The content of the email"
+                    },
+                    "email": {
+                        "type": "string",
+                        "description": "The email address to send the email to"
+                    },
+                    "subject": {
+                        "type": "string",
+                        "description": "The subject of the email"
+                    }
+                },
+                "description": "A service representing a network-accessible API\nbound to port `9090`."
+            }
+        },
+        "securitySchemes": {
+            "default": {
+                "type": "oauth2",
+                "flows": {
+                    "implicit": {
+                        "authorizationUrl": "https:///authorize",
+                        "scopes": {}
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,1 +1,89 @@
- {"openapi":"3.0.1","info":{"title":"Question Answering  Ballerina","version":"0.1.0"},"servers":[{"url":"https://f2c7f522-ef47-48ce-a429-3fc2f15d2011-dev.e1-us-east-azure.choreoapis.dev/xiwk/question-answering-ballerina/1.0.0"}],"paths":{"/generateAnswer":{"post":{"operationId":"postGenerateanswer","requestBody":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/Request"}}}},"responses":{"200":{"description":"Ok","content":{"application/json":{"schema":{"$ref":"#/components/schemas/Response"}}}}},"security":[{"default":[]}],"x-throttling-tier":"Unlimited","x-throttling-limit":{"requestCount":-1,"unit":"MINUTE"},"x-auth-type":"Application & Application User"}}},"components":{"schemas":{"Request":{"required":["question"],"type":"object","properties":{"question":{"type":"string"}}},"Response":{"required":["answer"],"type":"object","properties":{"answer":{"type":"string"}}}},"securitySchemes":{"default":{"type":"oauth2","flows":{"implicit":{"authorizationUrl":"https:///authorize","scopes":{}}}}}}}
+{
+    "openapi": "3.0.1",
+    "info": {
+        "title": "Question Answering  Ballerina",
+        "version": "0.1.0"
+    },
+    "servers": [
+        {
+            "url": "https://f2c7f522-ef47-48ce-a429-3fc2f15d2011-dev.e1-us-east-azure.choreoapis.dev/xiwk/question-answering-ballerina/1.0.0"
+        }
+    ],
+    "paths": {
+        "/generateAnswer": {
+            "post": {
+                "operationId": "postGenerateanswer",
+                "summary": "Find answers for questions about Choreo SaaS platform.",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Request"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "default": []
+                    }
+                ],
+                "x-throttling-tier": "Unlimited",
+                "x-throttling-limit": {
+                    "requestCount": -1,
+                    "unit": "MINUTE"
+                },
+                "x-auth-type": "Application & Application User"
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Request": {
+                "required": [
+                    "question"
+                ],
+                "type": "object",
+                "properties": {
+                    "question": {
+                        "type": "string"
+                    }
+                }
+            },
+            "Response": {
+                "required": [
+                    "answer"
+                ],
+                "type": "object",
+                "properties": {
+                    "answer": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "securitySchemes": {
+            "default": {
+                "type": "oauth2",
+                "flows": {
+                    "implicit": {
+                        "authorizationUrl": "https:///authorize",
+                        "scopes": {}
+                    }
+                }
+            }
+        }
+    }
+}
