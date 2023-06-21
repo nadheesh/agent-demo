@@ -1,3 +1,4 @@
 target
 generated
 Config.toml
+.DS_Store
