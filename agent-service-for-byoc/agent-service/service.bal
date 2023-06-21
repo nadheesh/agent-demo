@@ -51,6 +51,6 @@ service / on new http:Listener(9090) {
         }
         agent:ExecutionStep[] agentExecutionSteps = agent.run(payload.command);
 
-        return {"response": agentExecutionSteps.toString()};
+        return agentExecutionSteps.pop().thought;
     }
 }
