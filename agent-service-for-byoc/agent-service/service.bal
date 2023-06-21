@@ -41,7 +41,7 @@ service / on new http:Listener(9090) {
         }
         agent:Gpt3Model model = check new ({auth: {token: openAIToken}});
         self.agent = check new (model, ...toolKits);
-        log:printInfo("Agent initialized successfully");
+        log:printInfo("Agent initialized successfully...");
     }
 
     resource function post execute(@http:Payload ExecuteCommandInput payload) returns json|error {
