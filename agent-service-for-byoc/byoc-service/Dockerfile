@@ -1,4 +1,4 @@
-FROM nadheesh/agent:v1.0.0
+FROM nadheesh/agent:v1.0.1
 
 USER root
 
@@ -6,6 +6,8 @@ RUN adduser --disabled-password -G troupe -u 10001 -h /home/ballerina "agent"
 
 # COPY ./openapi /home/ballerina/openapi
 # # COPY ./Config.toml /home/ballerina/Config.toml
+
+RUN mkdir /home/ballerina/openapi
 
 WORKDIR /home/ballerina
 
