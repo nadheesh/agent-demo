@@ -1,4 +1,4 @@
-FROM nadheesh/agent:v1.0.1
+FROM nadheesh/agent:v1.0.2
 
 USER root
 
