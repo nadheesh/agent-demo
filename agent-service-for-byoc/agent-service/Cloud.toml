@@ -1,4 +1,7 @@
 [container.image]
-repository="jayanihewavitharana"
+repository="nadheesh"
 name="agent"
-tag="latest"
+tag="v1.0.2"
+
+[settings]
+buildImage=true

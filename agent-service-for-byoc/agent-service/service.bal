@@ -2,6 +2,7 @@ import ballerina/http;
 import ballerina/file;
 import ballerina/log;
 import ballerinax/ai.agent;
+import ballerina/regex;
 
 configurable string openAIToken = ?;
 configurable string accessToken = ?;
@@ -20,15 +21,18 @@ type AgentData record {|
 
 # A service representing a network-accessible API
 # bound to port `9090`.
-service / on new http:Listener(9090) {
+isolated service / on new http:Listener(9090) {
 
-    agent:Agent? agent = ();
+    private final agent:Agent agent;
 
     function init() returns error? {
         agent:HttpServiceToolKit[] toolKits = [];
         file:MetaData[] files = check file:readDir(OPENAPI_DIR_PATH);
         foreach file:MetaData file in files {
             string filePath = file.absPath;
+            if !file.absPath.endsWith(".json") {
+                continue;
+            }
             agent:HttpApiSpecification apiSpecification = check agent:extractToolsFromOpenApiSpec(filePath);
             string? serviceUrl = apiSpecification.serviceUrl;
             if serviceUrl == () {
@@ -51,6 +55,9 @@ service / on new http:Listener(9090) {
         }
         agent:ExecutionStep[] agentExecutionSteps = agent.run(payload.command);
 
-        return agentExecutionSteps.pop().thought;
+        string answer = agentExecutionSteps.pop().thought;
+        string[] splitedAnswer = regex:split(answer, "Final Answer:");
+
+        return splitedAnswer[splitedAnswer.length() - 1].trim();
     }
 }
