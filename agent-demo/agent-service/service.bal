@@ -5,8 +5,8 @@ import ballerinax/ai.agent;
 import ballerina/regex;
 
 configurable string azureOpenAIToken = ?;
-// configurable string emailAccessToken = ?;
-// configurable string trainRefreshToken = ?;
+configurable string clientId = ?;
+configurable string clientSecret = ?;
 
 const string DEPLOYMENT_ID = "gpt3";
 const string API_VERSION = "2023-05-15";
@@ -45,8 +45,8 @@ isolated service / on new http:Listener(9090) {
             agent:HttpServiceToolKit toolKit = check new (serviceUrl, apiSpecification.tools, {
                 auth: {
                     tokenUrl: "https://choreo-am-service:9443/oauth2/token",
-                    clientId: "Szf33GtS9B8gEccWoTHZ5qRL77Ya",
-                    clientSecret: "7t8lkaFsHKT8mFDccFJEiqhqRPga"
+                    clientId,
+                    clientSecret
                 }
             });
             toolKits.push(toolKit);
