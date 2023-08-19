@@ -1,0 +1,53 @@
+openapi: 3.0.1
+info:
+  title: /
+  version: 0.1.0
+servers:
+- url: "https://f2c7f522-ef47-48ce-a429-3fc2f15d2011-dev.e1-us-east-azure.choreoapis.dev/zgzz/emailservice/endpoint-9090-803/1.0.0"
+  variables:
+    server:
+      default: http://localhost
+    port:
+      default: "9090"
+paths:
+  /sendEmail:
+    post:
+      summary: Useful to send mails to a given receiver
+      operationId: postSendemail
+      requestBody:
+        description: email request payload
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmailRequest'
+      responses:
+        "201":
+          description: Created
+          content:
+            text/plain:
+              schema:
+                type: string
+        "500":
+          description: Internal server error
+          content:
+            text/plain:
+              schema:
+                type: string
+components:
+  schemas:
+    EmailRequest:
+      required:
+      - body
+      - receiver
+      - sender
+      - subject
+      type: object
+      properties:
+        sender:
+          type: string
+        receiver:
+          type: string
+        subject:
+          type: string
+        body:
+          type: string
