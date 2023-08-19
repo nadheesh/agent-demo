@@ -11,7 +11,7 @@ configurable string clientSecret = ?;
 const string DEPLOYMENT_ID = "gpt3";
 const string API_VERSION = "2023-05-15";
 const string SERVICE_URL = "https://openai-rnd.openai.azure.com/openai";
-const string OPENAPI_DIR_PATH = "agent-service-for-byoc/agent-service/openapi";
+const string OPENAPI_DIR_PATH = "openapi";
 
 // const string OPENAPI_DIR_PATH = "/home/ballerina/openapi";
 
@@ -34,17 +34,17 @@ isolated service / on new http:Listener(9090) {
         file:MetaData[] files = check file:readDir(OPENAPI_DIR_PATH);
         foreach file:MetaData file in files {
             string filePath = file.absPath;
-            if !file.absPath.endsWith(".json") {
+            if !(file.absPath.endsWith(".json") || file.absPath.endsWith(".yaml")) {
                 continue;
             }
-            agent:HttpApiSpecification apiSpecification = check agent:extractToolsFromOpenApiSpec(filePath);
+            agent:HttpApiSpecification apiSpecification = check agent:extractToolsFromOpenApiSpecFile(filePath);
             string? serviceUrl = apiSpecification.serviceUrl;
             if serviceUrl == () {
                 return error("Service URL not found for the API: " + filePath);
             }
             agent:HttpServiceToolKit toolKit = check new (serviceUrl, apiSpecification.tools, {
                 auth: {
-                    tokenUrl: "https://choreo-am-service:9443/oauth2/token",
+                    tokenUrl: "https://sts.choreo.dev/oauth2/token",
                     clientId,
                     clientSecret
                 }
@@ -61,7 +61,7 @@ isolated service / on new http:Listener(9090) {
         if agent == () {
             return error("Agent is not initialized");
         }
-        agent:ExecutionStep[] agentExecutionSteps = agent.run(payload.command);
+        agent:ExecutionStep[] agentExecutionSteps = agent.run(payload.command, context = "Possible train stations are Colombo, Galle and Kandy. My location is Colombo.");
 
         string answer = agentExecutionSteps.pop().thought;
         string[] splitedAnswer = regex:split(answer, "Final Answer:");
