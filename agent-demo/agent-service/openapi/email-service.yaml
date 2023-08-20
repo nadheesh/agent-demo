@@ -45,6 +45,7 @@ components:
       properties:
         sender:
           type: string
+          default: "train-service@gmail.com"
         receiver:
           type: string
         subject:

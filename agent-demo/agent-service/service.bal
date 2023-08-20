@@ -1,8 +1,8 @@
 import ballerina/http;
 import ballerina/file;
 import ballerina/log;
-import ballerinax/ai.agent;
 import ballerina/regex;
+import ballerinax/ai.agent;
 
 configurable string azureDeployementId = ?;
 configurable string azureApiVersion = ?;
@@ -59,14 +59,19 @@ isolated service / on new http:Listener(9090) {
         agent:Agent agent = self.agent;
 
         // execute the command
-        agent:ExecutionStep[] agentExecutionSteps = agent.run(
-            payload.command,
-            context = "Possible train stations are Colombo, Galle and Kandy. My location is Colombo."
-        );
+        agent:ExecutionStep[] agentExecutionSteps = agent.run(payload.command, context = {
+            "Current Time": "15.00",
+            "My Location": "Colombo",
+            "My Email": "john@gmail.com",
+            "Sender Email": "train-service@gov.com"
+        });
 
         // returns only the final outcome
         string answer = agentExecutionSteps.pop().thought;
         string[] splitedAnswer = regex:split(answer, "Final Answer:");
+        if splitedAnswer.length() <= 1 {
+            return error("Failed to execute the given command.");
+        }
         return splitedAnswer[splitedAnswer.length() - 1].trim();
     }
 }
