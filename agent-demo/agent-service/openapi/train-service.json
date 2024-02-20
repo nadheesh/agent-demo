@@ -6,7 +6,7 @@
   },
   "servers": [
     {
-      "url": "https://f2c7f522-ef47-48ce-a429-3fc2f15d2011-dev.e1-us-east-azure.choreoapis.dev/zgzz/trainbooking/endpoint-9090-803/1.0.0",
+      "url": "https://f2c7f522-ef47-48ce-a429-3fc2f15d2011-dev.e1-us-east-azure.choreoapis.dev/zgzz/trainapi/endpoint-9091-6c0/v1",
       "variables": {
         "server": {
           "default": "http://localhost"
